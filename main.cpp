@@ -78,12 +78,7 @@ void readStateOfTheGameFromJson(std::vector<Car> *cars, const std::string &path)
 int main() {
 
     std::vector<Car> cars;
-//    sf::Image image;
-//    image.loadFromFile("../resources/cars2.png");
-//    cars = createCarsFromImage(image);
-//    writeStateOfTheGameToJson(cars);
-//    return 0;)
-    readStateOfTheGameFromJson(&cars, "game.json");
+    readStateOfTheGameFromJson(&cars, "../resources/game.json");
 
     sf::Font font;
     font.loadFromFile("../resources/arial.ttf");
