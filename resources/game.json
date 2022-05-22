@@ -1,0 +1,286 @@
+{
+  "Cars": [
+    {
+      "occupiedPositions": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 1
+        }
+      ],
+      "movingDirections": [
+        true,
+        false,
+        true,
+        false
+      ],
+      "color": [
+        43,
+        255,
+        0
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 0
+        }
+      ],
+      "movingDirections": [
+        false,
+        true,
+        false,
+        true
+      ],
+      "color": [
+        255,
+        166,
+        0
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 4,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "movingDirections": [
+        true,
+        false,
+        true,
+        false
+      ],
+      "color": [
+        0,
+        238,
+        255
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 3
+        }
+      ],
+      "movingDirections": [
+        true,
+        false,
+        true,
+        false
+      ],
+      "color": [
+        255,
+        0,
+        187
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 2,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "movingDirections": [
+        false,
+        true,
+        false,
+        true
+      ],
+      "color": [
+        255,
+        0,
+        0
+      ],
+      "outDir": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 3
+        }
+      ],
+      "movingDirections": [
+        false,
+        true,
+        false,
+        true
+      ],
+      "color": [
+        200,
+        0,
+        255
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 5,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        }
+      ],
+      "movingDirections": [
+        true,
+        false,
+        true,
+        false
+      ],
+      "color": [
+        255,
+        229,
+        0
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 0,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 4
+        },
+        {
+          "x": 2,
+          "y": 4
+        }
+      ],
+      "movingDirections": [
+        false,
+        true,
+        false,
+        true
+      ],
+      "color": [
+        221,
+        0,
+        255
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 4,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        }
+      ],
+      "movingDirections": [
+        true,
+        false,
+        true,
+        false
+      ],
+      "color": [
+        0,
+        255,
+        170
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "occupiedPositions": [
+        {
+          "x": 0,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 5
+        },
+        {
+          "x": 2,
+          "y": 5
+        }
+      ],
+      "movingDirections": [
+        false,
+        true,
+        false,
+        true
+      ],
+      "color": [
+        0,
+        55,
+        255
+      ],
+      "outDir": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ]
+}
