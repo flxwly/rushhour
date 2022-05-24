@@ -1,9 +1,3 @@
-//
-// Created by flxwl on 20.05.2022.
-//
-
-#include <iostream>
-#include <utility>
 #include "Car.hpp"
 
 Car::Car(std::vector<sf::Vector2i> occupiedPositions, std::array<bool, 4> canMoveToDirection, sf::Color color,

@@ -1,16 +1,12 @@
 #ifndef RUSHHOUR_CAR_HPP
 #define RUSHHOUR_CAR_HPP
 
-#include "GameSettings.hpp"
-
-#define NORTH sf::Vector2i(0, -1);
-#define EAST sf::Vector2i(1, 0);
-#define SOUTH sf::Vector2i(0, 1);
-#define WEST sf::Vector2i(-1, 0);
-
-
+#include <iostream>
+#include <utility>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "Car.hpp"
+#include "GameSettings.hpp"
 
 class Car {
 
@@ -38,7 +34,7 @@ public:
     [[nodiscard]] sf::Vector2i getOutDir() const {return outDir;}
 
 private:
-    std::array<bool, 4> movingDirections;
+    std::array<bool, 4> movingDirections{};
     std::vector<sf::Vector2i> occupiedPositions;
     sf::Color color;
     sf::Vector2i outDir = sf::Vector2i(0, -1);
