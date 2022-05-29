@@ -11,20 +11,16 @@
           "y": 1
         }
       ],
-      "movingDirections": [
-        true,
-        false,
-        true,
-        false
-      ],
-      "color": [
-        43,
-        255,
-        0
-      ],
+      "movesHorizontal": false,
+      "movesVertical": false,
       "outDir": {
         "x": 0,
-        "y": 0
+        "y": 1
+      },
+      "color": {
+        "r": 43,
+        "g": 255,
+        "b": 0
       }
     },
     {

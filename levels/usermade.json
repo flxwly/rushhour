@@ -1,0 +1,158 @@
+{
+  "test2": {
+    "BoardSize": {
+      "x": 6,
+      "y": 6
+    },
+    "Cars": [
+      {
+        "occupiedPositions": [
+          {
+            "x": 2,
+            "y": 3
+          },
+          {
+            "x": 3,
+            "y": 3
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 255,
+          "g": 0,
+          "b": 0
+        }
+      }
+    ]
+  },
+  "test3": {
+    "BoardSize": {
+      "x": 6,
+      "y": 6
+    },
+    "Cars": [
+      {
+        "occupiedPositions": [
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 2
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 206,
+          "g": 255,
+          "b": 0
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 2
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 206,
+          "g": 255,
+          "b": 0
+        }
+      }
+    ]
+  },
+  "test4": {
+    "BoardSize": {
+      "x": 6,
+      "y": 6
+    },
+    "Cars": [
+      {
+        "x": 1,
+        "y": 2,
+        "movesVertically": false,
+        "outDir": {
+          "x": 1,
+          "y": 3
+        },
+        "color": {
+          "x": 1,
+          "y": 4,
+          "b": 0
+        }
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "movesVertically": false,
+        "outDir": {
+          "x": 1,
+          "y": 3
+        },
+        "color": {
+          "x": 1,
+          "y": 4,
+          "b": 0
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 3
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 0,
+          "g": 46,
+          "b": 255
+        }
+      }
+    ]
+  }
+}

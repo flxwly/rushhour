@@ -1,9 +1,10 @@
 #include "Car.hpp"
 
-Car::Car(std::vector<sf::Vector2i> occupiedPositions, std::array<bool, 4> canMoveToDirection, sf::Color color,
+Car::Car(std::vector<sf::Vector2i> occupiedPositions, bool movesHorizontally, bool movesVertically, sf::Color color,
          sf::Vector2i outDir) {
     this->occupiedPositions = std::move(occupiedPositions);
-    this->movingDirections = canMoveToDirection;
+    this->movesHorizontally = movesHorizontally;
+    this->movesVertically = movesVertically;
     this->color = color;
     this->outDir = outDir;
 }
@@ -58,45 +59,14 @@ bool Car::canMove(sf::Vector2i direction, std::array<std::array<Car *, GRID_WIDT
 }
 
 
-bool Car::canMoveInDirection(sf::Vector2i direction) {
-    if (direction.x > 0) {
-        return movingDirections[1];
-    } else if (direction.x < 0) {
-        return movingDirections[3];
-    } else if (direction.y > 0) {
-        return movingDirections[2];
-    } else if (direction.y < 0) {
-        return movingDirections[0];
+bool Car::canMoveInDirection(sf::Vector2i direction) const {
+    if (direction.x != 0) {
+        return movesHorizontally;
     }
+
+    if (direction.y != 0) {
+        return movesVertically;
+    }
+
     return false;
-}
-
-std::string Car::toJsonString() const {
-    std::string jsonString = "{\n";
-    jsonString += "\"occupiedPositions\": [";
-    for (auto &position: occupiedPositions) {
-        jsonString += "{\"x\": " + std::to_string(position.x) + ", \"y\": " + std::to_string(position.y) + "}";
-        if (&position != &occupiedPositions.back()) {
-            jsonString += ", ";
-        }
-    }
-    jsonString += "],\n";
-    jsonString += "\"movingDirections\": [";
-    for (auto &direction: movingDirections) {
-        jsonString += (direction) ? "true" : "false";
-        if (&direction != &movingDirections.back()) {
-            jsonString += ", ";
-        }
-    }
-    jsonString += "],\n";
-    jsonString += "\"color\": ["
-                  + std::to_string(color.r) + ", "
-                  + std::to_string(color.g) + ", "
-                  + std::to_string(color.b) + "],\n";
-
-    jsonString += "\"outDir:\" {\"x\":" + std::to_string(outDir.x) + ", \"y\":" + std::to_string(outDir.y) + "}\n";
-
-    jsonString += "}";
-
-    return jsonString;
 }
