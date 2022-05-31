@@ -4,30 +4,34 @@ void
 LevelHandler::loadLevel(std::vector<Car> *cars, std::vector<std::vector<Car *>> *board, const std::string &levelName) {
 
     rapidjson::Document document;
+    std::string filePath = "../levels/";
     if (levelName.find("originalLevel") != std::string::npos) {
-        std::ifstream file("../levels/originals.json");
-        std::string json((std::istreambuf_iterator<char>(file)),
-                         std::istreambuf_iterator<char>());
-        document.Parse(json.c_str());
+        filePath += "originals.json";
     } else {
-        std::ifstream file("../levels/usermade.json");
-        std::string json((std::istreambuf_iterator<char>(file)),
-                         std::istreambuf_iterator<char>());
-        document.Parse(json.c_str());
+        filePath += "usermade.json";
     }
+    std::cout << filePath << std::endl;
+    std::ifstream file(filePath);
+    std::string json((std::istreambuf_iterator<char>(file)),
+                     std::istreambuf_iterator<char>());
+    document.Parse(json.c_str());
 
-    auto &level = document[levelName.c_str()];
     board->clear();
+    rapidjson::Value &level = document[levelName.c_str()];
+
     for (int i = 0; i < level["BoardSize"]["x"].GetInt(); i++) {
         board->push_back(std::vector<Car *>());
+
         for (int j = 0; j < level["BoardSize"]["y"].GetInt(); j++) {
             board->at(i).push_back(nullptr);
         }
     }
 
     cars->clear();
+
     for (auto &car: level["Cars"].GetArray()) {
         std::vector<sf::Vector2i> positions;
+
         for (auto &position: car["occupiedPositions"].GetArray()) {
             positions.emplace_back(position["x"].GetInt(), position["y"].GetInt());
         }
@@ -35,26 +39,9 @@ LevelHandler::loadLevel(std::vector<Car> *cars, std::vector<std::vector<Car *>> 
         bool movesHorizontally = car["movesHorizontally"].GetBool();
         bool movesVertically = car["movesVertically"].GetBool();
 
-
         sf::Color color(car["color"]["r"].GetInt(), car["color"]["g"].GetInt(), car["color"]["b"].GetInt());
 
-        sf::Vector2i outDir = {0, 0};
-        switch (car["outDir"].GetInt()) {
-            case 0:
-                outDir = sf::Vector2i(1, 0);
-                break;
-            case 1:
-                outDir = sf::Vector2i(0, 1);
-                break;
-            case 2:
-                outDir = sf::Vector2i(-1, 0);
-                break;
-            case 3:
-                outDir = sf::Vector2i(0, -1);
-                break;
-            default:
-                break;
-        }
+        sf::Vector2i outDir = {car["outDir"]["x"].GetInt(), car["outDir"]["y"].GetInt()};
 
         cars->push_back(Car(positions, movesHorizontally, movesVertically, color, outDir));
     }
@@ -75,24 +62,19 @@ void LevelHandler::exportLevel(const std::vector<Car> &cars, const std::vector<s
 
     rapidjson::Value level(rapidjson::kObjectType);
 
-    std::cout << "Parsed existing document" << std::endl;
-
     // Board size
     rapidjson::Value boardSize(rapidjson::kObjectType);
     boardSize.AddMember("x", board.size(), document.GetAllocator());
     boardSize.AddMember("y", board.at(0).size(), document.GetAllocator());
     level.AddMember("BoardSize", boardSize, document.GetAllocator());
 
-    std::cout << "Added board size" << std::endl;
-
     // Cars
     rapidjson::Value carsArray(rapidjson::kArrayType);
     for (const auto &car: cars) {
-        carsArray.PushBack(carToJsonObject(car), document.GetAllocator());
+        carsArray.PushBack(carToJsonObject(car, document.GetAllocator()), document.GetAllocator());
     }
 
     level.AddMember("Cars", carsArray, document.GetAllocator());
-    std::cout << "Added cars" << std::endl;
 
     if (document.HasMember(levelName.c_str())) {
         document.RemoveMember(levelName.c_str());
@@ -100,16 +82,14 @@ void LevelHandler::exportLevel(const std::vector<Car> &cars, const std::vector<s
     document.AddMember(rapidjson::Value(levelName.c_str(), document.GetAllocator()), level, document.GetAllocator());
 
     std::ofstream ofs(filePath);
+    ofs.clear();
     rapidjson::OStreamWrapper osw(ofs);
     rapidjson::Writer<rapidjson::OStreamWrapper> writer(osw);
     document.Accept(writer);
     ofs.close();
 }
 
-rapidjson::Value LevelHandler::carToJsonObject(const Car &car) {
-
-    rapidjson::Document document;
-    rapidjson::Document::AllocatorType &allocator = document.GetAllocator();
+rapidjson::Value LevelHandler::carToJsonObject(const Car &car, rapidjson::Document::AllocatorType &allocator) {
 
     rapidjson::Value carObject(rapidjson::kObjectType);
 

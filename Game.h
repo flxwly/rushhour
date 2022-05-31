@@ -9,10 +9,12 @@
 
 class Game {
 public:
-    Game(int sizeX, int sizeY);
+    Game(sf::Vector2i size, sf::Font &font);
 
     void update();
     void render();
+
+    bool isRunning() const { return window.isOpen(); }
 
 private:
     sf::RenderWindow window;
@@ -24,6 +26,8 @@ private:
     // GUI
     GUI gui;
 
+    // Font
+    sf::Font font;
 
     // Game content
     std::vector<Car> cars;

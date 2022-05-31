@@ -13,7 +13,7 @@ class Car {
 public:
     Car() = default;
 
-    Car(std::vector<sf::Vector2i> occupiedPositions, bool movesHorizontally, bool movesVertically, sf::Color color, sf::Vector2i outDir);
+    Car(const std::vector<sf::Vector2i> &occupiedPositions, bool movesHorizontally, bool movesVertically, sf::Color color, sf::Vector2i outDir);
 
     [[nodiscard]] std::vector<sf::Vector2i> getOccupiedPositions() const {return occupiedPositions;}
 
@@ -21,11 +21,19 @@ public:
 
     bool canMoveInDirection(sf::Vector2i direction) const;
 
-    bool canMove(sf::Vector2i direction, std::array<std::array<Car *, GRID_HEIGHT>, GRID_WIDTH> &board);
+    /** Check if the car can move in the direction.
+     * @param direction - direction of the car
+     * @param board - board of the game (reference)
+     */
+    bool canMove(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
 
-    bool canFinish(sf::Vector2i direction, std::array<std::array<Car *, GRID_HEIGHT>, GRID_WIDTH> &board);
+    bool canFinish(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
 
-    void move(sf::Vector2i direction, std::array<std::array<Car *, GRID_HEIGHT>, GRID_WIDTH> &board);
+    /** Move the car
+     * @param direction - direction of the car
+     * @param board - board of the game
+     */
+    void move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
 
     [[nodiscard]] sf::Color getColor() const {return color;}
 

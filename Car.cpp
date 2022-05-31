@@ -1,15 +1,15 @@
 #include "Car.hpp"
 
-Car::Car(std::vector<sf::Vector2i> occupiedPositions, bool movesHorizontally, bool movesVertically, sf::Color color,
+Car::Car(const std::vector<sf::Vector2i> &occupiedPositions, bool movesHorizontally, bool movesVertically, sf::Color color,
          sf::Vector2i outDir) {
-    this->occupiedPositions = std::move(occupiedPositions);
+    this->occupiedPositions = occupiedPositions;
     this->movesHorizontally = movesHorizontally;
     this->movesVertically = movesVertically;
     this->color = color;
     this->outDir = outDir;
 }
 
-void Car::move(sf::Vector2i direction, std::array<std::array<Car *, GRID_HEIGHT>, GRID_WIDTH> &board) {
+void Car::move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
     if (canMove(direction, board)) {
         for (auto &position: occupiedPositions) {
             board[position.x][position.y] = nullptr;
@@ -27,7 +27,7 @@ void Car::move(sf::Vector2i direction, std::array<std::array<Car *, GRID_HEIGHT>
 }
 
 
-bool Car::canFinish(sf::Vector2i direction, std::array<std::array<Car *, 6>, 6> &board) {
+bool Car::canFinish(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
     if (!canMoveInDirection(direction)) {
         return false;
     }
@@ -42,7 +42,7 @@ bool Car::canFinish(sf::Vector2i direction, std::array<std::array<Car *, 6>, 6> 
     });
 }
 
-bool Car::canMove(sf::Vector2i direction, std::array<std::array<Car *, GRID_WIDTH>, GRID_HEIGHT> &board) {
+bool Car::canMove(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
     if (!canMoveInDirection(direction)) {
         return false;
     }

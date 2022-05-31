@@ -1,13 +1,13 @@
 #ifndef RUSHHOUR_GUI_H
 #define RUSHHOUR_GUI_H
 
-
-#include "Button.h"
 #include <SFML/Graphics.hpp>
+#include "Button.h"
+#include "GameSettings.hpp"
 
 class GUI : public sf::Drawable {
 public:
-    explicit GUI(sf::Vector2f size);
+    GUI(sf::Vector2f size, sf::Font &font);
 
     void update();
 
@@ -24,13 +24,15 @@ public:
     Button previousLevel;
     Button play;
 
-    std::string levelName = "";
+    int curLevel = 0;
+    int getShowState() const { return showState; }
+    int setShowState(int showState) { return this->showState = showState; }
 
 private:
     sf::Font font;
 
     sf::Vector2f scale;
-    int showSate = 0;
+    int showState = 1;
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };

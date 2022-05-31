@@ -8,12 +8,12 @@
       {
         "occupiedPositions": [
           {
-            "x": 2,
-            "y": 3
+            "x": 1,
+            "y": 2
           },
           {
-            "x": 3,
-            "y": 3
+            "x": 2,
+            "y": 2
           }
         ],
         "movesHorizontally": true,
@@ -27,6 +27,33 @@
           "g": 0,
           "b": 0
         }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 3
+          },
+          {
+            "x": 3,
+            "y": 4
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 25,
+          "g": 0,
+          "b": 255
+        }
       }
     ]
   },
@@ -39,11 +66,11 @@
       {
         "occupiedPositions": [
           {
-            "x": 2,
+            "x": 1,
             "y": 2
           },
           {
-            "x": 3,
+            "x": 2,
             "y": 2
           }
         ],
@@ -54,8 +81,8 @@
           "y": 0
         },
         "color": {
-          "r": 206,
-          "g": 255,
+          "r": 255,
+          "g": 0,
           "b": 0
         }
       },
@@ -63,11 +90,15 @@
         "occupiedPositions": [
           {
             "x": 2,
-            "y": 2
+            "y": 1
           },
           {
             "x": 3,
-            "y": 2
+            "y": 1
+          },
+          {
+            "x": 4,
+            "y": 1
           }
         ],
         "movesHorizontally": true,
@@ -77,9 +108,36 @@
           "y": 0
         },
         "color": {
-          "r": 206,
-          "g": 255,
-          "b": 0
+          "r": 227,
+          "g": 0,
+          "b": 255
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 3
+          },
+          {
+            "x": 3,
+            "y": 4
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 25,
+          "g": 0,
+          "b": 255
         }
       }
     ]
@@ -91,53 +149,94 @@
     },
     "Cars": [
       {
-        "x": 1,
-        "y": 2,
+        "occupiedPositions": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 2,
+            "y": 2
+          }
+        ],
+        "movesHorizontally": true,
         "movesVertically": false,
         "outDir": {
-          "x": 1,
-          "y": 3
+          "x": 0,
+          "y": 0
         },
         "color": {
-          "x": 1,
-          "y": 4,
-          "b": 0
-        }
-      },
-      {
-        "x": 1,
-        "y": 2,
-        "movesVertically": false,
-        "outDir": {
-          "x": 1,
-          "y": 3
-        },
-        "color": {
-          "x": 1,
-          "y": 4,
+          "r": 255,
+          "g": 0,
           "b": 0
         }
       },
       {
         "occupiedPositions": [
           {
-            "x": 1,
-            "y": 0
-          },
-          {
-            "x": 1,
+            "x": 2,
             "y": 1
           },
           {
-            "x": 1,
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": 4,
+            "y": 1
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 227,
+          "g": 0,
+          "b": 255
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 255,
+          "g": 236,
+          "b": 0
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 3,
             "y": 2
           },
           {
-            "x": 1,
+            "x": 3,
             "y": 3
           },
           {
-            "x": 1,
+            "x": 3,
             "y": 4
           }
         ],
@@ -148,8 +247,258 @@
           "y": 0
         },
         "color": {
+          "r": 25,
+          "g": 0,
+          "b": 255
+        }
+      }
+    ]
+  },
+  "original1": {
+    "BoardSize": {
+      "x": 6,
+      "y": 6
+    },
+    "Cars": [
+      {
+        "occupiedPositions": [
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 2
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 255,
+          "g": 0,
+          "b": 0
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 4,
+            "y": 0
+          },
+          {
+            "x": 5,
+            "y": 0
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 255,
+          "g": 166,
+          "b": 0
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 4,
+            "y": 1
+          },
+          {
+            "x": 4,
+            "y": 2
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
           "r": 0,
-          "g": 46,
+          "g": 238,
+          "b": 255
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 3
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 255,
+          "g": 0,
+          "b": 187
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 43,
+          "g": 255,
+          "b": 0
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 3,
+            "y": 3
+          },
+          {
+            "x": 4,
+            "y": 3
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 200,
+          "g": 0,
+          "b": 255
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 5,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 4
+          },
+          {
+            "x": 5,
+            "y": 5
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 255,
+          "g": 229,
+          "b": 0
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 0,
+            "y": 4
+          },
+          {
+            "x": 1,
+            "y": 4
+          },
+          {
+            "x": 2,
+            "y": 4
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 221,
+          "g": 0,
+          "b": 255
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 4,
+            "y": 4
+          },
+          {
+            "x": 4,
+            "y": 5
+          }
+        ],
+        "movesHorizontally": false,
+        "movesVertically": true,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 0,
+          "g": 255,
+          "b": 170
+        }
+      },
+      {
+        "occupiedPositions": [
+          {
+            "x": 0,
+            "y": 5
+          },
+          {
+            "x": 1,
+            "y": 5
+          },
+          {
+            "x": 2,
+            "y": 5
+          }
+        ],
+        "movesHorizontally": true,
+        "movesVertically": false,
+        "outDir": {
+          "x": 0,
+          "y": 0
+        },
+        "color": {
+          "r": 0,
+          "g": 55,
           "b": 255
         }
       }
