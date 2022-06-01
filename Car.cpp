@@ -38,7 +38,8 @@ bool Car::canFinish(sf::Vector2i direction, std::vector<std::vector<Car *>> &boa
 
     return std::any_of(occupiedPositions.begin(), occupiedPositions.end(), [&](sf::Vector2i position) {
         sf::Vector2i newPos = position + direction;
-        return newPos.x < 0 || newPos.x >= GRID_WIDTH || newPos.y < 0 || newPos.y >= GRID_HEIGHT;
+        return newPos.x < 0 || newPos.x >= board.size() || newPos.y < 0 || newPos.y >= board[0].size() ||
+               board[newPos.x][newPos.y] != nullptr;
     });
 }
 
@@ -50,8 +51,8 @@ bool Car::canMove(sf::Vector2i direction, std::vector<std::vector<Car *>> &board
     bool canMove = !std::any_of(occupiedPositions.begin(), occupiedPositions.end(), [&](const sf::Vector2i &position) {
         sf::Vector2i newPosition = position + direction;
 
-        return newPosition.x < 0 || newPosition.x >= GRID_WIDTH
-               || newPosition.y < 0 || newPosition.y >= GRID_HEIGHT
+        return newPosition.x < 0 || newPosition.x >= board.size()
+               || newPosition.y < 0 || newPosition.y >= board[0].size()
                || (board[newPosition.x][newPosition.y] && board[newPosition.x][newPosition.y] != this);
     });
 
@@ -69,4 +70,24 @@ bool Car::canMoveInDirection(sf::Vector2i direction) const {
     }
 
     return false;
+}
+
+std::vector<sf::Vector2i> Car::getOutPositions(std::vector<std::vector<Car *>> &board) {
+    if (occupiedPositions.empty() || outDir == sf::Vector2i(0, 0) || board.empty()) {
+        return {};
+    }
+
+    std::vector<sf::Vector2i> outPositions;
+
+    for (auto position: occupiedPositions) {
+
+        sf::Vector2i newPosition = sf::Vector2i {
+            std::max(-1, std::min(position.x + outDir.x * static_cast<int>(board.size()), static_cast<int>(board.size()))),
+            std::max(-1, std::min(position.y + outDir.y * static_cast<int>(board[0].size()), static_cast<int>(board[0].size())))
+        };
+        if (std::find(outPositions.begin(), outPositions.end(), newPosition) == outPositions.end()) {
+            outPositions.push_back(newPosition);
+        }
+    }
+    return outPositions;
 }

@@ -10,6 +10,6 @@ set(SFML_STATIC_LIBRARIES TRUE)
 find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
 add_executable(rushhour main.cpp Car.cpp Car.hpp LevelHandler.cpp LevelHandler.h
-        Button.cpp Button.h GUI.cpp GUI.h Game.cpp Game.h GameSettings.hpp)
+        Button.cpp Button.h Game.cpp Game.h GameSettings.hpp)
 
 target_link_libraries(rushhour sfml-graphics)

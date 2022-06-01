@@ -4,8 +4,8 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Car.hpp"
-#include "GUI.h"
 #include "LevelHandler.h"
+#include "Button.h"
 
 class Game {
 public:
@@ -17,21 +17,26 @@ public:
     bool isRunning() const { return window.isOpen(); }
 
 private:
-    sf::RenderWindow window;
-    Car *selectedCar = nullptr;
 
+    void renderButtons();
+    void renderCars();
+    void renderBackground();
+
+    sf::RenderWindow window;
+
+    // animations
     sf::Clock blinker;
     bool blink = false;
 
-    // GUI
-    GUI gui;
-
-    // Font
+    // Buttons
     sf::Font font;
+    std::map<std::string, Button> buttons;
 
     // Game content
     std::vector<Car> cars;
     std::vector<std::vector<Car *>> board;
+    Car *selectedCar = nullptr;
+    int currentLevel = 0;
 };
 
 

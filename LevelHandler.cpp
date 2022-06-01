@@ -1,22 +1,27 @@
 #include "LevelHandler.h"
 
-void
+bool
 LevelHandler::loadLevel(std::vector<Car> *cars, std::vector<std::vector<Car *>> *board, const std::string &levelName) {
 
     rapidjson::Document document;
     std::string filePath = "../levels/";
-    if (levelName.find("originalLevel") != std::string::npos) {
+    if (levelName.find("original") != std::string::npos) {
         filePath += "originals.json";
     } else {
         filePath += "usermade.json";
     }
-    std::cout << filePath << std::endl;
+    // std::cout << filePath << " | " << levelName << std::endl;
     std::ifstream file(filePath);
     std::string json((std::istreambuf_iterator<char>(file)),
                      std::istreambuf_iterator<char>());
+
     document.Parse(json.c_str());
 
     board->clear();
+    if (!document.HasMember(levelName.c_str())) {
+        return false;
+    }
+
     rapidjson::Value &level = document[levelName.c_str()];
 
     for (int i = 0; i < level["BoardSize"]["x"].GetInt(); i++) {
@@ -45,6 +50,15 @@ LevelHandler::loadLevel(std::vector<Car> *cars, std::vector<std::vector<Car *>> 
 
         cars->push_back(Car(positions, movesHorizontally, movesVertically, color, outDir));
     }
+
+    for (auto &car: *cars) {
+        for (auto position: car.getOccupiedPositions()) {
+            board->at(position.x)[position.y] = &car;
+        }
+    }
+
+    // std::cout << "Loaded " << cars->size() << " cars" << std::endl;
+    return true;
 }
 
 void LevelHandler::exportLevel(const std::vector<Car> &cars, const std::vector<std::vector<Car *>> &board,
@@ -53,8 +67,8 @@ void LevelHandler::exportLevel(const std::vector<Car> &cars, const std::vector<s
     std::cout << "Exporting level..." << std::endl;
 
     rapidjson::Document document;
-    std::string filePath = (levelName.find("originalLevel") != std::string::npos) ? "../levels/originals.json"
-                                                                                  : "../levels/usermade.json";
+    std::string filePath = (levelName.find("original") != std::string::npos) ? "../levels/originals.json"
+                                                                             : "../levels/usermade.json";
     std::ifstream file(filePath);
     std::string json((std::istreambuf_iterator<char>(file)),
                      std::istreambuf_iterator<char>());

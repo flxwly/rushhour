@@ -21,23 +21,17 @@ public:
 
     bool canMoveInDirection(sf::Vector2i direction) const;
 
-    /** Check if the car can move in the direction.
-     * @param direction - direction of the car
-     * @param board - board of the game (reference)
-     */
     bool canMove(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
 
     bool canFinish(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
 
-    /** Move the car
-     * @param direction - direction of the car
-     * @param board - board of the game
-     */
     void move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
 
     [[nodiscard]] sf::Color getColor() const {return color;}
 
     [[nodiscard]] sf::Vector2i getOutDir() const {return outDir;}
+
+    std::vector<sf::Vector2i> getOutPositions(std::vector<std::vector<Car *>> &board);
 
     [[nodiscard]] bool canMoveHorizontally() const {return movesHorizontally;}
 

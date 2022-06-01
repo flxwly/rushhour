@@ -5,28 +5,19 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-class Button : public sf::Drawable{
+class Button {
 public:
     Button() = default;
-    Button(sf::Vector2f position, sf::Vector2f size, sf::Color color, sf::Color hoverColor, sf::Color pressedColor, sf::Color textColor, std::string text, sf::Font font);
+    Button(sf::Vector2f position, sf::Vector2f size, sf::Color color, sf::Color hoverColor, sf::Color pressedColor, sf::Color textColor, const std::string& text, const sf::Font& font);
 
-    void update();
+    bool isHover(sf::Window &window) const;
+    bool isPressed(sf::Window &window, sf::Event event) const;
+    bool isPressed(sf::Window &window) const;
 
-    bool isHover() const { return hover; }
-    bool isPressed() const { return pressed; }
-private:
-    sf::RectangleShape shape;
-    sf::Font font;
+    sf::RectangleShape standardShape;
+    sf::RectangleShape hoverShape;
+    sf::RectangleShape pressedShape;
     sf::Text text;
-    sf::Color color;
-    sf::Color hoverColor;
-    sf::Color pressedColor;
-    sf::Color textColor;
-
-    bool hover = false;
-    bool pressed = false;
-
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
 
 

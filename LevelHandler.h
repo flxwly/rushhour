@@ -12,7 +12,7 @@
 namespace LevelHandler {
 
     void generateLevel(const std::string& levelName);
-    void loadLevel(std::vector<Car> *cars, std::vector<std::vector<Car *>> *board, const std::string& levelName);
+    bool loadLevel(std::vector<Car> *cars, std::vector<std::vector<Car *>> *board, const std::string& levelName);
     void exportLevel(const std::vector<Car>& cars, const std::vector<std::vector<Car *>>& board, const std::string& levelName);
     rapidjson::Value carToJsonObject(const Car &car, rapidjson::Document::AllocatorType &allocator);
 

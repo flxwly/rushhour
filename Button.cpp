@@ -1,56 +1,36 @@
+#include <iostream>
 #include "Button.h"
 
 Button::Button(sf::Vector2f position, sf::Vector2f size, sf::Color color, sf::Color hoverColor, sf::Color pressedColor,
-               sf::Color textColor, std::string text, sf::Font font) {
+               sf::Color textColor, const std::string& text, const sf::Font& font) {
 
-    shape.setPosition(position);
-    shape.setSize(size);
+    standardShape.setPosition(position);
+    standardShape.setSize(size);
+    standardShape.setFillColor(color);
 
-    color = color;
-    hoverColor = hoverColor;
-    pressedColor = pressedColor;
-    textColor = textColor;
-    text = text;
-    font = font;
+    hoverShape = standardShape;
+    pressedShape = standardShape;
 
-    update();
+    hoverShape.setFillColor(hoverColor);
+    pressedShape.setFillColor(pressedColor);
+
+    this->text.setString(text);
+    this->text.setFont(font);
+    this->text.setFillColor(textColor);
+    this->text.setCharacterSize(size.y);
+    this->text.setPosition(position.x - this->text.getLocalBounds().width / 2 + size.x / 2,
+                           position.y - this->text.getLocalBounds().height / 2 + size.y / 2);
+
 }
 
-void Button::update() {
-    if (sf::Mouse::getPosition().x > shape.getPosition().x &&
-        sf::Mouse::getPosition().x < shape.getPosition().x + shape.getSize().x &&
-        sf::Mouse::getPosition().y > shape.getPosition().y &&
-        sf::Mouse::getPosition().y < shape.getPosition().y + shape.getSize().y) {
-
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            hover = false;
-            pressed = true;
-        } else {
-            hover = true;
-            pressed = false;
-        }
-    } else {
-        hover = false;
-        pressed = false;
-    }
-
-    if (hover) {
-        shape.setFillColor(hoverColor);
-    } else if (pressed) {
-        shape.setFillColor(pressedColor);
-    } else {
-        shape.setFillColor(color);
-    }
+bool Button::isHover(sf::Window &window) const{
+    return standardShape.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window)));
 }
 
-void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+bool Button::isPressed(sf::Window &window, sf::Event event) const {
+    return isHover(window) && event.type == sf::Event::MouseButtonReleased;
+}
 
-    target.draw(text, states);
-    if (pressed) {
-        target.draw(shape, states);
-    } else if (hover) {
-        target.draw(shape, states);
-    } else {
-        target.draw(shape, states);
-    }
+bool Button::isPressed(sf::Window &window) const {
+    return isHover(window) && sf::Mouse::isButtonPressed(sf::Mouse::Left);
 }
