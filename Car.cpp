@@ -1,14 +1,15 @@
 #include "Car.hpp"
 
-Car::Car(std::vector<sf::Vector2i> occupiedPositions, std::array<bool, 4> canMoveToDirection, sf::Color color,
+Car::Car(const std::vector<sf::Vector2i> &occupiedPositions, bool movesHorizontally, bool movesVertically, sf::Color color,
          sf::Vector2i outDir) {
-    this->occupiedPositions = std::move(occupiedPositions);
-    this->movingDirections = canMoveToDirection;
+    this->occupiedPositions = occupiedPositions;
+    this->movesHorizontally = movesHorizontally;
+    this->movesVertically = movesVertically;
     this->color = color;
     this->outDir = outDir;
 }
 
-void Car::move(sf::Vector2i direction, std::array<std::array<Car *, GRID_HEIGHT>, GRID_WIDTH> &board) {
+void Car::move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
     if (canMove(direction, board)) {
         for (auto &position: occupiedPositions) {
             board[position.x][position.y] = nullptr;
@@ -26,7 +27,7 @@ void Car::move(sf::Vector2i direction, std::array<std::array<Car *, GRID_HEIGHT>
 }
 
 
-bool Car::canFinish(sf::Vector2i direction, std::array<std::array<Car *, 6>, 6> &board) {
+bool Car::canFinish(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
     if (!canMoveInDirection(direction)) {
         return false;
     }
@@ -37,11 +38,12 @@ bool Car::canFinish(sf::Vector2i direction, std::array<std::array<Car *, 6>, 6> 
 
     return std::any_of(occupiedPositions.begin(), occupiedPositions.end(), [&](sf::Vector2i position) {
         sf::Vector2i newPos = position + direction;
-        return newPos.x < 0 || newPos.x >= GRID_WIDTH || newPos.y < 0 || newPos.y >= GRID_HEIGHT;
+        return newPos.x < 0 || newPos.x >= board.size() || newPos.y < 0 || newPos.y >= board[0].size() ||
+               board[newPos.x][newPos.y] != nullptr;
     });
 }
 
-bool Car::canMove(sf::Vector2i direction, std::array<std::array<Car *, GRID_WIDTH>, GRID_HEIGHT> &board) {
+bool Car::canMove(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
     if (!canMoveInDirection(direction)) {
         return false;
     }
@@ -49,8 +51,8 @@ bool Car::canMove(sf::Vector2i direction, std::array<std::array<Car *, GRID_WIDT
     bool canMove = !std::any_of(occupiedPositions.begin(), occupiedPositions.end(), [&](const sf::Vector2i &position) {
         sf::Vector2i newPosition = position + direction;
 
-        return newPosition.x < 0 || newPosition.x >= GRID_WIDTH
-               || newPosition.y < 0 || newPosition.y >= GRID_HEIGHT
+        return newPosition.x < 0 || newPosition.x >= board.size()
+               || newPosition.y < 0 || newPosition.y >= board[0].size()
                || (board[newPosition.x][newPosition.y] && board[newPosition.x][newPosition.y] != this);
     });
 
@@ -58,45 +60,34 @@ bool Car::canMove(sf::Vector2i direction, std::array<std::array<Car *, GRID_WIDT
 }
 
 
-bool Car::canMoveInDirection(sf::Vector2i direction) {
-    if (direction.x > 0) {
-        return movingDirections[1];
-    } else if (direction.x < 0) {
-        return movingDirections[3];
-    } else if (direction.y > 0) {
-        return movingDirections[2];
-    } else if (direction.y < 0) {
-        return movingDirections[0];
+bool Car::canMoveInDirection(sf::Vector2i direction) const {
+    if (direction.x != 0) {
+        return movesHorizontally;
     }
+
+    if (direction.y != 0) {
+        return movesVertically;
+    }
+
     return false;
 }
 
-std::string Car::toJsonString() const {
-    std::string jsonString = "{\n";
-    jsonString += "\"occupiedPositions\": [";
-    for (auto &position: occupiedPositions) {
-        jsonString += "{\"x\": " + std::to_string(position.x) + ", \"y\": " + std::to_string(position.y) + "}";
-        if (&position != &occupiedPositions.back()) {
-            jsonString += ", ";
+std::vector<sf::Vector2i> Car::getOutPositions(std::vector<std::vector<Car *>> &board) {
+    if (occupiedPositions.empty() || outDir == sf::Vector2i(0, 0) || board.empty()) {
+        return {};
+    }
+
+    std::vector<sf::Vector2i> outPositions;
+
+    for (auto position: occupiedPositions) {
+
+        sf::Vector2i newPosition = sf::Vector2i {
+            std::max(-1, std::min(position.x + outDir.x * static_cast<int>(board.size()), static_cast<int>(board.size()))),
+            std::max(-1, std::min(position.y + outDir.y * static_cast<int>(board[0].size()), static_cast<int>(board[0].size())))
+        };
+        if (std::find(outPositions.begin(), outPositions.end(), newPosition) == outPositions.end()) {
+            outPositions.push_back(newPosition);
         }
     }
-    jsonString += "],\n";
-    jsonString += "\"movingDirections\": [";
-    for (auto &direction: movingDirections) {
-        jsonString += (direction) ? "true" : "false";
-        if (&direction != &movingDirections.back()) {
-            jsonString += ", ";
-        }
-    }
-    jsonString += "],\n";
-    jsonString += "\"color\": ["
-                  + std::to_string(color.r) + ", "
-                  + std::to_string(color.g) + ", "
-                  + std::to_string(color.b) + "],\n";
-
-    jsonString += "\"outDir:\" {\"x\":" + std::to_string(outDir.x) + ", \"y\":" + std::to_string(outDir.y) + "}\n";
-
-    jsonString += "}";
-
-    return jsonString;
+    return outPositions;
 }
