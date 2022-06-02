@@ -19,7 +19,7 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, sf::Color color, sf::Co
     this->text.setFillColor(textColor);
     this->text.setCharacterSize(size.y);
     this->text.setPosition(position.x - this->text.getLocalBounds().width / 2 + size.x / 2,
-                           position.y - this->text.getLocalBounds().height / 2 + size.y / 2);
+                           position.y - this->text.getLocalBounds().height / 2 + size.y / 4);
 
 }
 

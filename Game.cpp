@@ -16,6 +16,8 @@ Game::Game(sf::Vector2i size, sf::Font &font) : window(sf::VideoMode(size.x, siz
     this->cars = std::vector<Car>();
     this->board = std::vector<std::vector<Car *>>();
 
+    LevelHandler::loadLevel(&this->cars, &this->board, "original" + std::to_string(currentLevel));
+
 
     std::cout << "Game created" << std::endl;
 }
