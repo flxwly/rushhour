@@ -38,8 +38,7 @@ bool Car::canFinish(sf::Vector2i direction, std::vector<std::vector<Car *>> &boa
 
     return std::any_of(occupiedPositions.begin(), occupiedPositions.end(), [&](sf::Vector2i position) {
         sf::Vector2i newPos = position + direction;
-        return newPos.x < 0 || newPos.x >= board.size() || newPos.y < 0 || newPos.y >= board[0].size() ||
-               board[newPos.x][newPos.y] != nullptr;
+        return newPos.x < 0 || newPos.x >= board.size() || newPos.y < 0 || newPos.y >= board[0].size();
     });
 }
 

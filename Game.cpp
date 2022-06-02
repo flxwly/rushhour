@@ -1,8 +1,10 @@
 #include "Game.h"
 
 Game::Game(sf::Vector2i size, sf::Font &font) : window(sf::VideoMode(size.x, size.y), "Rush Hour") {
-    // Buttons
-    this->font = font;
+
+    // Es werden die Knöpfe an den jeweiligen Positionen erstellt und
+    // in einer std::map gespeichert. Der Schlüssel ist immer der erste
+    // String bei den Parametern von buttons.emplace(Schlüssel, Wert).
     buttons.emplace("prev",
                     Button(sf::Vector2f(20, size.y - 40), sf::Vector2f(40, 20), sf::Color::Green, sf::Color::Red,
                            sf::Color::Blue, sf::Color::White, "<", font));
@@ -12,21 +14,21 @@ Game::Game(sf::Vector2i size, sf::Font &font) : window(sf::VideoMode(size.x, siz
                     Button(sf::Vector2f(size.x / 2 - 60, size.y - 40), sf::Vector2f(120, 20), sf::Color::Green,
                            sf::Color::Red, sf::Color::Blue, sf::Color::White, "nochmal", font));
 
-    // Game content
+    // Zu Beginn ist das Spielfeld leer und das Board besitzt keine Größe.
     this->cars = std::vector<Car>();
     this->board = std::vector<std::vector<Car *>>();
 
+    // Als nächstes wird ein Level geladen
     LevelHandler::loadLevel(&this->cars, &this->board, "original" + std::to_string(currentLevel));
 
-
-    std::cout << "Game created" << std::endl;
+    // std::cout << "Game created" << std::endl;
 }
 
 void Game::update() {
 
     // Für jeden Button soll geprüft werden,
     // ob sich die Maus über diesem befindet.
-    for (auto btn: buttons) {
+    for (const auto& btn: buttons) {
         btn.second.isHover(window);
     }
 
@@ -100,6 +102,12 @@ void Game::update() {
             }
         }
 
+        // Wenn das Event vom Typ sf::Event::KeyPressed ist, dann wurde
+        // eine Taste auf der Tastatur gedrückt. Wenn es nun noch ein
+        // ausgewähltes Auto gibt, so soll dieses bewegt werden.
+        // event.key.code enthält die Taste, die gedrückt wurde.
+        // sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::Up und sf::Keyboard::Down
+        // sind die Pfeiltasten.
         if (event.type == sf::Event::KeyPressed && selectedCar) {
             switch (event.key.code) {
                 case sf::Keyboard::Left:
@@ -113,6 +121,8 @@ void Game::update() {
                     break;
                 case sf::Keyboard::Down:
                     selectedCar->move({0, 1}, board);
+                    break;
+                default:
                     break;
             }
         }

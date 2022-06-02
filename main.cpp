@@ -2,6 +2,8 @@
 
 int main() {
 
+    //LevelHandler::generateLevel("original4");
+
     sf::Font font;
     font.loadFromFile("../fonts/arial.ttf");
 
