@@ -50,23 +50,26 @@ private:
     // sf::Clock ist eine Klasse von SFML, die die Zeit in Millisekunden
     // ab einem bestimmten Zeitpunkt zurückgeben kann. Der Zeitpunkt kann immer
     // neu gesetzt werden.
+    // Siehe auch: https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1Clock.php
     sf::Clock blinker;
     bool blink = false;
 
     // Bei std::map werden statt normalen Indexen Objekte verwendet, die als Schlüssel
     // verwendet werden. Diese Schlüssel sind hier vom Typ std::string, also würde
     // buttons["knopf"] den Button mit dem Schlüssel "knopf" zurückgeben.
-    // Siehe auch: http://www.cplusplus.com/reference/map/map/
+    // Siehe auch: https://en.cppreference.com/w/cpp/container/map
+    // Abgesehen davon verhält sich std::map wie std::vector.
     std::map<std::string, Button> buttons;
 
     // Ein std::vector<Typ T> ist eine dynamische Reihung vom Typ T.
+    // Siehe auch: https://en.cppreference.com/w/cpp/container/vector
     // In diesem Fall werden hier alle Autos gespeichert, die in dem aktuellen
     // Level vorhanden sind.
     std::vector<Car> cars;
 
     // In dieser 2-dimensionalen dynamischen Reihung sind Referenzen zu den einzelnen
     // Autos gespeichert. Wenn ein Feld leer ist, dann ist die Referenz ein nullptr
-    // (Für mehr Informationen zu Zeigern siehe auch https://www.cplusplus.com/doc/tutorial/pointers/).
+    // (Für mehr Informationen zu Zeigern siehe auch https://en.cppreference.com/w/cpp/language/pointer).
     std::vector<std::vector<Car *>> board;
 
     // selectedCar ist eine Referenz auf das aktuell ausgewählte Auto. Wenn kein

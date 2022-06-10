@@ -141,6 +141,8 @@ void Game::update() {
             }
         }
 
+        // Das Level ist beendet, wenn keins der Autos, die rauswollen mehr auf dem Brett ist.
+        // Dafür wird für jedes Auto geprüft, ob die belegten Felder leer sind.
         bool gameWon = true;
         for (const auto &car: cars) {
             if (car.getOutDir() != sf::Vector2i(0, 0) && !car.getOccupiedPositions().empty()) {
@@ -148,6 +150,7 @@ void Game::update() {
             }
         }
 
+        // Das Level ist abgeschlossen und das nächste soll geladen werden.
         if (gameWon) {
             sounds.playSound(SoundEffect::GameWon);
             selectedCar = nullptr;
@@ -165,14 +168,18 @@ void Game::render() {
 
     if (rerenderBackground) {
         renderBackground();
+        rerenderBackground = false;
     }
     if (rerenderCars) {
         renderCars();
+        rerenderCars = false;
     }
     if (rerenderButtons) {
         renderButtons();
+        rerenderButtons = false;
     }
 
+    // Blinkanimation für Autos
     if (selectedCar) {
         sf::Vector2f cellSize = sf::Vector2f(GAME_WIDTH / static_cast<float>(board.size()),
                                              GAME_HEIGHT / static_cast<float>(board[0].size()));

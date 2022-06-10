@@ -10,7 +10,7 @@ LevelHandler::loadLevel(std::vector<Car> *cars, std::vector<std::vector<Car *>> 
     } else {
         filePath += "usermade.json";
     }
-    // std::cout << filePath << " | " << levelName << std::endl;
+
     std::ifstream file(filePath);
     std::string json((std::istreambuf_iterator<char>(file)),
                      std::istreambuf_iterator<char>());
