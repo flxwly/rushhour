@@ -14,7 +14,7 @@ enum class SoundEffect {
 };
 
 enum class MusicTrack {
-    Game
+    MyCastleTown
 };
 
 class Sounds {

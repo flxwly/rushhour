@@ -21,7 +21,7 @@ Game::Game(sf::Vector2i size, sf::Font &font) : window(sf::VideoMode(size.x, siz
     // Als nächstes wird ein Level geladen
     LevelHandler::loadLevel(&this->cars, &this->board, "original" + std::to_string(currentLevel));
 
-    sounds.playMusic(MusicTrack::Game);
+    sounds.playMusic(MusicTrack::MyCastleTown);
 }
 
 void Game::update() {
@@ -166,18 +166,10 @@ void Game::update() {
 
 void Game::render() {
 
-    if (rerenderBackground) {
-        renderBackground();
-        rerenderBackground = false;
-    }
-    if (rerenderCars) {
-        renderCars();
-        rerenderCars = false;
-    }
-    if (rerenderButtons) {
-        renderButtons();
-        rerenderButtons = false;
-    }
+    renderBackground();
+    renderCars();
+    renderButtons();
+
 
     // Blinkanimation für Autos
     if (selectedCar) {

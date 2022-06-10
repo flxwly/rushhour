@@ -35,8 +35,9 @@ void Sounds::playSound(SoundEffect sound) {
 }
 
 void Sounds::playMusic(MusicTrack track) {
-    if (track == MusicTrack::Game) {
-        backgroundMusic.openFromFile("../sounds/game.ogg");
+    if (track == MusicTrack::MyCastleTown) {
+        backgroundMusic.openFromFile("../music/My Castle Town.ogg");
+        backgroundMusic.setVolume(20);
     }
     backgroundMusic.setLoop(true);
     backgroundMusic.play();
