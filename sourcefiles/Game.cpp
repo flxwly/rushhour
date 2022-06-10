@@ -21,15 +21,17 @@ Game::Game(sf::Vector2i size, sf::Font &font) : window(sf::VideoMode(size.x, siz
     // Als nächstes wird ein Level geladen
     LevelHandler::loadLevel(&this->cars, &this->board, "original" + std::to_string(currentLevel));
 
-    // std::cout << "Game created" << std::endl;
+    sounds.playMusic(MusicTrack::Game);
 }
 
 void Game::update() {
 
     // Für jeden Button soll geprüft werden,
     // ob sich die Maus über diesem befindet.
-    for (const auto& btn: buttons) {
-        btn.second.isHover(window);
+    for (const auto &btn: buttons) {
+        if (btn.second.isHover(window)) {
+            rerenderButtons = true;
+        }
     }
 
     // sf::Event ist eine Klasse, die Informationen über ein Event enthält.
@@ -52,6 +54,7 @@ void Game::update() {
         // und dementsprechend gehandelt werden.
         for (auto btn: buttons) {
             if (btn.second.isPressed(window, event)) {
+                sounds.playSound(SoundEffect::ButtonClick);
                 selectedCar = nullptr;
 
                 if (btn.first == "prev") {
@@ -62,6 +65,9 @@ void Game::update() {
                 if (!LevelHandler::loadLevel(&cars, &board, "original" + std::to_string(currentLevel))) {
                     currentLevel = 0;
                 };
+                rerenderCars = true;
+                rerenderButtons = true;
+                rerenderBackground = true;
                 break;
             }
         }
@@ -80,8 +86,8 @@ void Game::update() {
 
             // event.mouseButton enthält die Position des Mauszeigers, wenn der
             // Eventtyp sf::Event::MouseButtonPressed ist.
-            sf::Vector2i cell = sf::Vector2i((event.mouseButton.x - MARGIN) * board.size() / GAME_WIDTH,
-                                             (event.mouseButton.y - MARGIN) * board[0].size() / GAME_HEIGHT);
+            sf::Vector2i cell = sf::Vector2i((event.mouseButton.x - MARGIN) * (board.size()) / GAME_WIDTH,
+                                             (event.mouseButton.y - MARGIN) * (board[0].size()) / GAME_HEIGHT);
 
             // Wenn die Maus auf ein Feld in der Spielfeld-Matrix geklickt wurde,
             // dann wird geguckt, ob auf ein Feld mit einem Auto geklickt wurde.
@@ -109,49 +115,80 @@ void Game::update() {
         // sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::Up und sf::Keyboard::Down
         // sind die Pfeiltasten.
         if (event.type == sf::Event::KeyPressed && selectedCar) {
+            bool shouldMove = true, moved;
             switch (event.key.code) {
                 case sf::Keyboard::Left:
-                    selectedCar->move({-1, 0}, board);
+                    moved = selectedCar->move({-1, 0}, board);
                     break;
                 case sf::Keyboard::Right:
-                    selectedCar->move({1, 0}, board);
+                    moved = selectedCar->move({1, 0}, board);
                     break;
                 case sf::Keyboard::Up:
-                    selectedCar->move({0, -1}, board);
+                    moved = selectedCar->move({0, -1}, board);
                     break;
                 case sf::Keyboard::Down:
-                    selectedCar->move({0, 1}, board);
+                    moved = selectedCar->move({0, 1}, board);
                     break;
                 default:
+                    shouldMove = false;
                     break;
             }
-        }
-
-        bool gameOver = true;
-        for (const auto &car: cars) {
-            if (car.getOutDir() != sf::Vector2i(0, 0) && !car.getOccupiedPositions().empty()) {
-                gameOver = false;
+            if (shouldMove && moved) {
+                sounds.playSound(SoundEffect::CarMove);
+                rerenderCars = true;
+            } else if (shouldMove) {
+                sounds.playSound(SoundEffect::CarCrash);
             }
         }
 
-        if (gameOver) {
+        bool gameWon = true;
+        for (const auto &car: cars) {
+            if (car.getOutDir() != sf::Vector2i(0, 0) && !car.getOccupiedPositions().empty()) {
+                gameWon = false;
+            }
+        }
+
+        if (gameWon) {
+            sounds.playSound(SoundEffect::GameWon);
             selectedCar = nullptr;
             currentLevel++;
             if (!LevelHandler::loadLevel(&cars, &board, "original" + std::to_string(currentLevel))) {
                 currentLevel = 0;
-            };
+            }
+            rerenderBackground = true;
+            rerenderCars = true;
         }
-
     }
 }
 
 void Game::render() {
 
-    window.clear(sf::Color::White);
+    if (rerenderBackground) {
+        renderBackground();
+    }
+    if (rerenderCars) {
+        renderCars();
+    }
+    if (rerenderButtons) {
+        renderButtons();
+    }
 
-    renderBackground();
-    renderCars();
-    renderButtons();
+    if (selectedCar) {
+        sf::Vector2f cellSize = sf::Vector2f(GAME_WIDTH / static_cast<float>(board.size()),
+                                             GAME_HEIGHT / static_cast<float>(board[0].size()));
+        sf::RectangleShape cell(cellSize);
+        for (auto segment: selectedCar->getOccupiedPositions()) {
+            if (blink) {
+                cell.setFillColor(sf::Color(255, 255, 255, 100));
+            } else {
+                cell.setFillColor(selectedCar->getColor());
+            }
+
+            cell.setPosition(MARGIN + static_cast<float>(segment.x) * cellSize.x,
+                             MARGIN + static_cast<float>(segment.y) * cellSize.y);
+            window.draw(cell);
+        }
+    }
 
     if (blinker.getElapsedTime().asSeconds() > 0.5) {
         blink = !blink;
@@ -165,7 +202,8 @@ void Game::renderCars() {
     if (board.empty()) {
         return;
     }
-    sf::Vector2f cellSize = sf::Vector2f(GAME_WIDTH / board.size(), GAME_HEIGHT / board[0].size());
+    sf::Vector2f cellSize = sf::Vector2f(GAME_WIDTH / static_cast<float>(board.size()),
+                                         GAME_HEIGHT / static_cast<float>(board[0].size()));
 
 
     sf::RectangleShape cell(cellSize);
@@ -174,29 +212,17 @@ void Game::renderCars() {
     importantCell.setOutlineColor(sf::Color::Black);
     for (int x = 0; x < board.size(); x += 1) {
         for (int y = 0; y < board.at(x).size(); y += 1) {
-            cell.setPosition(MARGIN + x * cellSize.x, MARGIN + y * cellSize.y);
+            cell.setPosition(MARGIN + static_cast<float>(x) * cellSize.x,
+                             MARGIN + static_cast<float>(y) * cellSize.y);
             cell.setFillColor(board[x][y] == nullptr ? sf::Color::Transparent : board[x][y]->getColor());
 
             if (board[x][y] && board[x][y]->getOutDir() != sf::Vector2i(0, 0)) {
-                importantCell.setPosition(MARGIN + x * cellSize.x + cellSize.x / 4,
-                                          MARGIN + y * cellSize.y + cellSize.y / 4);
+                importantCell.setPosition(MARGIN + static_cast<float>(x) * cellSize.x + cellSize.x / 4,
+                                          MARGIN + static_cast<float>(y) * cellSize.y + cellSize.y / 4);
                 importantCell.setFillColor(board[x][y]->getColor());
                 window.draw(importantCell);
             }
 
-            window.draw(cell);
-        }
-    }
-
-    if (selectedCar) {
-        for (auto segment: selectedCar->getOccupiedPositions()) {
-            if (blink) {
-                cell.setFillColor(sf::Color(255, 255, 255, 100));
-            } else {
-                cell.setFillColor(selectedCar->getColor());
-            }
-
-            cell.setPosition(MARGIN + segment.x * cellSize.x, MARGIN + segment.y * cellSize.y);
             window.draw(cell);
         }
     }
@@ -230,14 +256,17 @@ void Game::renderBackground() {
     window.draw(background);
 
     // Spielfeld
-    sf::Vector2f cellSize(GAME_WIDTH / board.size(), GAME_HEIGHT / board[0].size());
+    sf::Vector2f cellSize(GAME_WIDTH / static_cast<float>(board.size()),
+                          GAME_HEIGHT / static_cast<float>(board[0].size()));
 
     // Vertikale Linien
-    for (int i = 0; i < board.size() + 1; ++i) {
+    for (int i = 0; i < board.size() + 1; i++) {
         sf::Vertex line[] =
                 {
-                        sf::Vertex(sf::Vector2f(i * cellSize.x + MARGIN, MARGIN), sf::Color::Black),
-                        sf::Vertex(sf::Vector2f(i * cellSize.x + MARGIN, GAME_HEIGHT + MARGIN), sf::Color::Black)
+                        sf::Vertex(sf::Vector2f(static_cast<float>(i) * cellSize.x + MARGIN,
+                                                MARGIN), sf::Color::Black),
+                        sf::Vertex(sf::Vector2f(static_cast<float>(i) * cellSize.x + MARGIN,
+                                                GAME_HEIGHT + MARGIN), sf::Color::Black)
                 };
         window.draw(line, 2, sf::Lines);
     }
@@ -246,8 +275,10 @@ void Game::renderBackground() {
     for (int i = 0; i < board[0].size() + 1; ++i) {
         sf::Vertex line[] =
                 {
-                        sf::Vertex(sf::Vector2f(MARGIN, i * cellSize.y + MARGIN), sf::Color::Black),
-                        sf::Vertex(sf::Vector2f(GAME_WIDTH + MARGIN, i * cellSize.y + MARGIN), sf::Color::Black)
+                        sf::Vertex(sf::Vector2f(MARGIN,
+                                                static_cast<float>(i) * cellSize.y + MARGIN), sf::Color::Black),
+                        sf::Vertex(sf::Vector2f(GAME_WIDTH + MARGIN,
+                                                static_cast<float>(i) * cellSize.y + MARGIN), sf::Color::Black)
                 };
         window.draw(line, 2, sf::Lines);
     }
@@ -257,7 +288,8 @@ void Game::renderBackground() {
     out.setFillColor(sf::Color::White);
     for (auto car: cars) {
         for (auto segment: car.getOutPositions(board)) {
-            out.setPosition(MARGIN + segment.x * cellSize.x, MARGIN + segment.y * cellSize.y);
+            out.setPosition(MARGIN + static_cast<float>(segment.x) * cellSize.x,
+                            MARGIN + static_cast<float>(segment.y) * cellSize.y);
             window.draw(out);
         }
     }

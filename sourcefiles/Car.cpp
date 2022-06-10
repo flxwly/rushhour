@@ -9,7 +9,7 @@ Car::Car(const std::vector<sf::Vector2i> &occupiedPositions, bool movesHorizonta
     this->outDir = outDir;
 }
 
-void Car::move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
+bool Car::move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
     if (canMove(direction, board)) {
         for (auto &position: occupiedPositions) {
             board[position.x][position.y] = nullptr;
@@ -18,12 +18,15 @@ void Car::move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board) {
         for (auto position: occupiedPositions) {
             board[position.x][position.y] = this;
         }
+        return true;
     } else if (canFinish(direction, board)) {
         for (auto &position: occupiedPositions) {
             board[position.x][position.y] = nullptr;
         }
         occupiedPositions.clear();
+        return true;
     }
+    return false;
 }
 
 

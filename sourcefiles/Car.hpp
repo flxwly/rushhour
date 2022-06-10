@@ -25,7 +25,7 @@ public:
 
     bool canFinish(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
 
-    void move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
+    bool move(sf::Vector2i direction, std::vector<std::vector<Car *>> &board);
 
     [[nodiscard]] sf::Color getColor() const {return color;}
 

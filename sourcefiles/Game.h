@@ -3,9 +3,11 @@
 
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Audio.hpp>
 #include "Car.hpp"
 #include "LevelHandler.h"
 #include "Button.h"
+#include "Sounds.hpp"
 
 class Game {
 public:
@@ -32,10 +34,18 @@ private:
     void renderCars();
     void renderBackground();
 
+    // Einzelne Variablen, um zu speichern, welche Teile des Bildes geupdatet werden sollen
+    bool rerenderButtons = true;
+    bool rerenderCars = true;
+    bool rerenderBackground = true;
+
     // Eine Variable vom Typ sf::RenderWindow, die das Fenster repräsentiert.
     // sf::RenderWindow ist eine Klasse von SFML und liefert grundlegende Funktionen
     // zur Darstellung von Grafiken. Siehe auch: http://www.sfml-dev.org/documentation/2.0/classsf_1_1RenderWindow.php
     sf::RenderWindow window;
+
+    // Ein Objekt der Soundklasse, welches dazu dient Sounds und Musik zu spielen.
+    Sounds sounds;
 
     // sf::Clock ist eine Klasse von SFML, die die Zeit in Millisekunden
     // ab einem bestimmten Zeitpunkt zurückgeben kann. Der Zeitpunkt kann immer

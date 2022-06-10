@@ -7,9 +7,11 @@ set(SFML_DIR "C:\\GCC_Compiler\\SFML-2.5.1x32\\lib\\cmake\\SFML")
 # Include the SFML library and link it static
 set(SFML_STATIC_LIBRARIES TRUE)
 
-find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
-add_executable(rushhour main.cpp Car.cpp Car.hpp LevelHandler.cpp LevelHandler.h
-        Button.cpp Button.h Game.cpp Game.h GameSettings.hpp)
 
-target_link_libraries(rushhour sfml-graphics)
+include_directories(${PROJECT_SOURCE_DIR}/sourcefiles)
+file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/sourcefiles/*.cpp)
+
+add_executable(rushhour ${SRC_FILES})
+target_link_libraries(rushhour sfml-graphics sfml-audio)

@@ -17,7 +17,7 @@
           }
         ],
         "movesHorizontally": true,
-        "movesVertically": false,
+        "movesVertically": true,
         "outDir": {
           "x": 1,
           "y": 0
