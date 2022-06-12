@@ -11,7 +11,7 @@
 
 class Game {
 public:
-    // Der Konstruktor der Game Klasse
+    // Der Konstruktor der Game-Klasse
     Game(sf::Vector2i size, sf::Font &font);
 
     // Die Methode update() wird in der main()-Methode immer
@@ -33,11 +33,6 @@ private:
     void renderButtons();
     void renderCars();
     void renderBackground();
-
-    // Einzelne Variablen, um zu speichern, welche Teile des Bildes geupdatet werden sollen
-    bool rerenderButtons = true;
-    bool rerenderCars = true;
-    bool rerenderBackground = true;
 
     // Eine Variable vom Typ sf::RenderWindow, die das Fenster repräsentiert.
     // sf::RenderWindow ist eine Klasse von SFML und liefert grundlegende Funktionen

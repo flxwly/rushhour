@@ -26,21 +26,13 @@ Game::Game(sf::Vector2i size, sf::Font &font) : window(sf::VideoMode(size.x, siz
 
 void Game::update() {
 
-    // Für jeden Button soll geprüft werden,
-    // ob sich die Maus über diesem befindet.
-    for (const auto &btn: buttons) {
-        if (btn.second.isHover(window)) {
-            rerenderButtons = true;
-        }
-    }
-
     // sf::Event ist eine Klasse, die Informationen über ein Event enthält.
     // window.pollEvent() liest das nächste Event aus und speichert es
-    // in der übergenen Variable. Solange ein Event vorhanden ist, liefert
+    // in der übergebenen Variable. Solange ein Event vorhanden ist, liefert
     // window.pollEvent() wahr zurück. Es wird für jeden Aufruf von
     // window.pollEvent() immer nur ein Event in der Variable gespeichert.
     // Wenn es mehrere Events gibt, muss window.pollEvent() mehrmals aufgerufen
-    // werden. Im Prinzip solange, bis die Methode falsch zurück liefert.
+    // werden. Im Prinzip so lange, bis die Methode falsch zurückliefert.
     sf::Event event;
     while (window.pollEvent(event)) {
 
@@ -52,7 +44,7 @@ void Game::update() {
 
         // Für jeden Button soll geprüft werden, ob dieser gedrückt wurde
         // und dementsprechend gehandelt werden.
-        for (auto btn: buttons) {
+        for (const auto &btn: buttons) {
             if (btn.second.isPressed(window, event)) {
                 sounds.playSound(SoundEffect::ButtonClick);
                 selectedCar = nullptr;
@@ -64,10 +56,8 @@ void Game::update() {
                 }
                 if (!LevelHandler::loadLevel(&cars, &board, "original" + std::to_string(currentLevel))) {
                     currentLevel = 0;
-                };
-                rerenderCars = true;
-                rerenderButtons = true;
-                rerenderBackground = true;
+                    LevelHandler::loadLevel(&cars, &board, "original" + std::to_string(currentLevel));
+                }
                 break;
             }
         }
@@ -78,6 +68,7 @@ void Game::update() {
         // ob es die linke Maustaste ist
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
 
+
             // Wenn das Spielfeld leer ist, kann keins der einzelnen Felder angeklickt werden.
             // Das Event wird ab hier übersprungen.
             if (board.empty()) {
@@ -86,8 +77,9 @@ void Game::update() {
 
             // event.mouseButton enthält die Position des Mauszeigers, wenn der
             // Eventtyp sf::Event::MouseButtonPressed ist.
-            sf::Vector2i cell = sf::Vector2i((event.mouseButton.x - MARGIN) * (board.size()) / GAME_WIDTH,
-                                             (event.mouseButton.y - MARGIN) * (board[0].size()) / GAME_HEIGHT);
+            sf::Vector2i cell = sf::Vector2i(
+                    (event.mouseButton.x - MARGIN) * (static_cast<int>(board.size())) / GAME_WIDTH,
+                    (event.mouseButton.y - MARGIN) * (static_cast<int>(board[0].size())) / GAME_HEIGHT);
 
             // Wenn die Maus auf ein Feld in der Spielfeld-Matrix geklickt wurde,
             // dann wird geguckt, ob auf ein Feld mit einem Auto geklickt wurde.
@@ -135,7 +127,6 @@ void Game::update() {
             }
             if (shouldMove && moved) {
                 sounds.playSound(SoundEffect::CarMove);
-                rerenderCars = true;
             } else if (shouldMove) {
                 sounds.playSound(SoundEffect::CarCrash);
             }
@@ -158,8 +149,6 @@ void Game::update() {
             if (!LevelHandler::loadLevel(&cars, &board, "original" + std::to_string(currentLevel))) {
                 currentLevel = 0;
             }
-            rerenderBackground = true;
-            rerenderCars = true;
         }
     }
 }
