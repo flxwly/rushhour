@@ -1,3 +1,5 @@
+#include <cmath>
+#include <random>
 #include "LevelHandler.h"
 
 bool
@@ -168,27 +170,8 @@ void LevelHandler::generateLevel(const std::string &levelName) {
     }
 
     for (const auto &car: occupiedPositions) {
-        int xMax = 0;
-        int yMax = 0;
-        int xMin = image.getSize().x;
-        int yMin = image.getSize().y;
 
-        for (auto position: car.first) {
-            if (position.x > xMax) {
-                xMax = position.x;
-            }
-            if (position.x < xMin) {
-                xMin = position.x;
-            }
-            if (position.y > yMax) {
-                yMax = position.y;
-            }
-            if (position.y < yMin) {
-                yMin = position.y;
-            }
-        }
-
-        bool movesHorizontally = xMax - xMin > yMax - yMin;
+        bool movesHorizontally = doesCarMoveHorizontally(car.first);
         bool movesVertically = !movesHorizontally;
 
         sf::Vector2i outDir = {0, 0};
@@ -206,4 +189,123 @@ void LevelHandler::generateLevel(const std::string &levelName) {
 
     exportLevel(cars, board, levelName);
     std::cout << "Done..." << std::endl;
+}
+
+void LevelHandler::generateRandom(int sizeX, int sizeY, int carNum, const std::string &levelName) {
+    std::vector<std::vector<Car *>> board(sizeX, std::vector<Car *>(sizeY));
+    std::vector<Car> cars;
+
+    std::vector<sf::Vector2i> possiblePositions(sizeX * sizeY);
+    for (int i = 0; i < sizeX; ++i) {
+        for (int j = 0; j < sizeY; ++j) {
+            if (j != std::floor(sizeY / 2)) {
+                possiblePositions.emplace_back(i, j);
+            }
+        }
+    }
+
+    std::random_device rd;
+    sf::Vector2i pos_ = sf::Vector2i (std::max(std::min(rand() % sizeX, sizeX - 2), 1), std::floor(sizeY / 2));
+    sf::Vector2i outDir_ = (pos_.x < std::floor(sizeX / 2)) ? sf::Vector2i(1, 0) : sf::Vector2i(-1, 0);
+
+    cars.push_back(Car({pos_, pos_ + sf::Vector2i (1, 0)}, true, false, sf::Color::Red, outDir_));
+
+    for (int i = 0; i < carNum; ++i) {
+        std::vector<sf::Vector2i> car = generateFittingCar(possiblePositions);
+        if (!car.empty()) {
+            possiblePositions.erase(std::remove_if(possiblePositions.begin(), possiblePositions.end(),
+                                                   [&car](const sf::Vector2i &pos) {
+                                                       return std::find(car.begin(), car.end(), pos) != car.end();
+                                                   }), possiblePositions.end());
+            sf::Color color = sf::Color(rand() % 250, rand() % 255, rand() % 255);
+            bool movesHorizontally = doesCarMoveHorizontally(car);
+
+            cars.push_back(Car(car, movesHorizontally, !movesHorizontally, color, {0, 0}));
+        }
+    }
+
+    for (auto &car : cars) {
+        for (auto pos : car.getOccupiedPositions()) {
+            board[pos.x][pos.y] = &car;
+        }
+    }
+
+    int counter = 0;
+    for (int i = 0; i < 18; ++i) {
+        for (int index = 1; index < cars.size(); ++index) {
+            sf::Vector2i dir = (cars.at(index).canMoveVertically()) ? sf::Vector2i (0, (rand() % 2) ? 1 : -1) : sf::Vector2i ((rand() % 2) ? 1 : -1, 0);
+            counter += cars.at(index).move(dir, board) ? 1 : 0;
+        }
+    }
+    std::cout << "Moved: " << counter << std::endl;
+    exportLevel(cars, board, levelName);
+}
+
+std::vector<sf::Vector2i>
+LevelHandler::generateFittingCar(std::vector<sf::Vector2i> possiblePositions) {
+    sf::Vector2i position = possiblePositions.at(rand() % possiblePositions.size());
+    int length = 2 + rand() % 2;
+    bool horizontal = rand() % 2;
+
+    if (possiblePositions.size() < length) {
+        if (possiblePositions.size() < 2) {
+            return {};
+        } else {
+            return generateFittingCar(possiblePositions);
+        }
+    }
+
+    if (doesCarFit(position, length, horizontal, possiblePositions)) {
+        return generateCar(position, length, horizontal);
+    } else if (doesCarFit(position, length, !horizontal, possiblePositions)) {
+        return generateCar(position, length, !horizontal);
+    } else if (doesCarFit(position, -length, horizontal, possiblePositions)) {
+        return generateCar(position, -length, horizontal);
+    } else if (doesCarFit(position, -length, !horizontal, possiblePositions)) {
+        return generateCar(position, -length, !horizontal);
+    } else {
+        return generateFittingCar(possiblePositions);
+    }
+}
+
+bool
+LevelHandler::doesCarFit(sf::Vector2i position, int length, bool horizontal,
+                         std::vector<sf::Vector2i> possiblePositions) {
+    std::vector<sf::Vector2i> car = generateCar(position, length, horizontal);
+    return !std::any_of(car.begin(), car.end(), [&possiblePositions](sf::Vector2i &position) {
+        return std::find(possiblePositions.begin(), possiblePositions.end(), position) == possiblePositions.end();
+    });
+}
+
+std::vector<sf::Vector2i> LevelHandler::generateCar(sf::Vector2i pos, int length, bool horizontal) {
+    std::vector<sf::Vector2i> car;
+    for (int i = std::min(length, 0); i < std::max(length, 0); ++i) {
+        if (horizontal) {
+            car.emplace_back(pos.x + i, pos.y);
+        } else {
+            car.emplace_back(pos.x, pos.y + i);
+        }
+    }
+    return car;
+}
+
+bool LevelHandler::doesCarMoveHorizontally(std::vector<sf::Vector2i> occupiedPositions) {
+
+    if (occupiedPositions.empty()) {
+        return false;
+    }
+
+    int xMax = 0;
+    int yMax = 0;
+    int xMin = occupiedPositions.at(0).x;
+    int yMin = occupiedPositions.at(0).y;
+
+    for (auto position: occupiedPositions) {
+        xMax = std::max(xMax, position.x);
+        yMax = std::max(yMax, position.y);
+        xMin = std::min(xMin, position.x);
+        yMin = std::min(yMin, position.y);
+    }
+
+    return xMax - xMin > yMax - yMin;
 }
