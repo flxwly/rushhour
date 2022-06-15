@@ -4,7 +4,7 @@ int main() {
 
     // Zufällige Level generieren
     //    for (int i = 0; i < 20; ++i) {
-    //        LevelHandler::generateRandom(10, 10, 30, "original" + std::to_string(i + 10));
+    //        LevelHandler::generateRandom(20, 20, 120, "original" + std::to_string(i + 50));
     //    }
 
     // Die Schriftart wird geladen

@@ -204,8 +204,13 @@ void LevelHandler::generateRandom(int sizeX, int sizeY, int carNum, const std::s
         }
     }
 
-    std::random_device rd;
-    sf::Vector2i pos_ = sf::Vector2i (std::max(std::min(rand() % sizeX, sizeX - 2), 1), std::floor(sizeY / 2));
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> randX(1, sizeX - 2); // define the range
+    std::uniform_int_distribution<> randY(1, sizeY - 2); // define the range
+    std::uniform_int_distribution<> randColor(0, 255); // define the range
+
+    sf::Vector2i pos_ = sf::Vector2i (randX(gen), std::floor(sizeY / 2));
     sf::Vector2i outDir_ = (pos_.x < std::floor(sizeX / 2)) ? sf::Vector2i(1, 0) : sf::Vector2i(-1, 0);
 
     cars.push_back(Car({pos_, pos_ + sf::Vector2i (1, 0)}, true, false, sf::Color::Red, outDir_));
@@ -217,7 +222,7 @@ void LevelHandler::generateRandom(int sizeX, int sizeY, int carNum, const std::s
                                                    [&car](const sf::Vector2i &pos) {
                                                        return std::find(car.begin(), car.end(), pos) != car.end();
                                                    }), possiblePositions.end());
-            sf::Color color = sf::Color(rand() % 250, rand() % 255, rand() % 255);
+            sf::Color color = sf::Color(randColor(gen), randColor(gen), randColor(gen));
             bool movesHorizontally = doesCarMoveHorizontally(car);
 
             cars.push_back(Car(car, movesHorizontally, !movesHorizontally, color, {0, 0}));
@@ -233,8 +238,13 @@ void LevelHandler::generateRandom(int sizeX, int sizeY, int carNum, const std::s
     int counter = 0;
     for (int i = 0; i < 18; ++i) {
         for (int index = 1; index < cars.size(); ++index) {
-            sf::Vector2i dir = (cars.at(index).canMoveVertically()) ? sf::Vector2i (0, (rand() % 2) ? 1 : -1) : sf::Vector2i ((rand() % 2) ? 1 : -1, 0);
-            counter += cars.at(index).move(dir, board) ? 1 : 0;
+            std::uniform_int_distribution<> randTurns(1, 8);
+            std::uniform_int_distribution<> randBool(0, 1);
+            int turns = randTurns(gen);
+            sf::Vector2i dir = (cars.at(index).canMoveVertically()) ? sf::Vector2i (0, (randBool(gen)) ? 1 : -1) : sf::Vector2i ((randBool(gen)) ? 1 : -1, 0);
+            for (int j = 0; j < turns; ++j) {
+                counter += cars.at(index).move(dir, board) ? 1 : 0;
+            }
         }
     }
     std::cout << "Moved: " << counter << std::endl;
